@@ -67,7 +67,7 @@ jobs:
       - name: Build + Deploy PR images to AKS
         timeout-minutes: 20
         run: |
-          PR_NUMBER=$(echo $GITHUB_REF | awk 'BEGIN { FS = "/" } ; { print $3 }')
+          PR_NUMBER=$(echo $GITHUB_SHA | awk 'BEGIN { FS = "/" } ; { print $3 }')
           NAMESPACE="pr${PR_NUMBER}"
           az aks get-credentials --name $PR_CLUSTER --resource-group $RESOURCE_GROUP
           cat <<EOF | kubectl apply -f -
