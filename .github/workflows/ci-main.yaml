@@ -93,7 +93,7 @@ jobs:
           command: run
           repository: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           tag: $GITHUB_SHA
-          namespace: $NAMESPACE
+          namespace: prod
           profile: network-policies
       - name: Wait For Pods
         timeout-minutes: 20
