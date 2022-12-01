@@ -80,8 +80,13 @@ jobs:
             name: $NAMESPACE
           EOF
           echo Deploying application
-          skaffold config set --global local-cluster false
-          skaffold run --default-repo=${{ secrets.REGISTRY_LOGIN_SERVER }}/$GITHUB_REF --tag=$GITHUB_SHA --namespace=$NAMESPACE -p network-policies
+      - uses: hiberbee/github-action-skaffold@1.24.0
+        with:
+          command: run
+          repository: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          tag: $GITHUB_SHA
+          namespace: $NAMESPACE
+          profile: network-policies
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
           RESOURCE_GROUP: "K8s-RG"
