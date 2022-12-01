@@ -28,6 +28,9 @@ jobs:
           login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
-      - uses: yokawasa/action-setup-kube-tools@v0.9.2
-      - run:
-          skaffold build  --default-repo=${{ secrets.REGISTRY_LOGIN_SERVER }}/microservices-k8s:${{ github.sha }}  --tag=$GITHUB_SHA
+
+      - uses: hiberbee/github-action-skaffold@1.24.0
+        with:
+          command: build
+          repository: ${{ secrets.REGISTRY_LOGIN_SERVER }}/microservices-k8s:${{ github.sha }}
+          tag: $GITHUB_SHA
