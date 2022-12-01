@@ -60,6 +60,9 @@ jobs:
       fail-fast: true
     steps:
     - uses: actions/checkout@v3
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
     - name: Build + Deploy PR images to GKE
       timeout-minutes: 20
       run: |
@@ -68,7 +71,7 @@ jobs:
         echo "::set-env name=NAMESPACE::$NAMESPACE"
         echo "::set-env name=PR_NUMBER::$PR_NUMBER"
 
-        gcloud container clusters get-credentials $PR_CLUSTER --zone $ZONE --project $PROJECT_ID
+        az aks get-credentials --name $PR_CLUSTER --resource-group $RESOURCE_GROUP
         cat <<EOF | kubectl apply -f -
         apiVersion: v1
         kind: Namespace
@@ -77,12 +80,13 @@ jobs:
         EOF
         echo Deploying application
         skaffold config set --global local-cluster false
-        skaffold run --default-repo=gcr.io/$PROJECT_ID/$GITHUB_REF --tag=$GITHUB_SHA --namespace=$NAMESPACE -p network-policies
+        skaffold run --default-repo=${{ secrets.REGISTRY_LOGIN_SERVER }}/$GITHUB_REF --tag=$GITHUB_SHA --namespace=$NAMESPACE -p network-policies
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+        RESOURCE_GROUP: "K8s-RG"
         PROJECT_ID: "online-boutique-ci"
-        PR_CLUSTER: "online-boutique-prs"
-        ZONE: "us-central1-c"
+        PR_CLUSTER: "asdw1e"
+        REGION: "eat asia"
     - name: Wait For Pods
       timeout-minutes: 20
       run: |
