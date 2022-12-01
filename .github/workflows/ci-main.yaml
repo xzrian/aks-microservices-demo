@@ -65,7 +65,6 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       - uses: yokawasa/action-setup-kube-tools@v0.9.2
       - name: Build + Deploy PR images to AKS
-        timeout-minutes: 20
         run: |
           PR_NUMBER=$(echo $GITHUB_SHA | awk 'BEGIN { FS = "/" } ; { print $3 }')
           NAMESPACE="pr${PR_NUMBER}"
